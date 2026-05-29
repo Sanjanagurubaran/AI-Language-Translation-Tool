@@ -19,11 +19,49 @@
 <body>
 
     <div class="container">
+        <button id="themeToggle">
+
+        <i class="fa-solid fa-moon"></i>
+
+        </button>
 
         <h1>
             <i class="fa-solid fa-language"></i>
             AI Language Translator
         </h1>
+
+        <!-- Image Upload -->
+
+        <div class="image-upload">
+
+        <input type="file"
+        id="imageInput"
+        accept="image/*">
+
+        </div>
+        <!-- CAMERA SECTION -->
+
+        <div class="camera-box">
+
+        <video id="video"
+        autoplay></video>
+
+        <canvas id="canvas"></canvas>
+
+        <button id="cameraBtn">
+
+        <i class="fa-solid fa-camera"></i>
+        Open Camera
+
+        </button>
+
+        <button id="captureBtn">
+
+        Capture & Translate
+
+        </button>
+
+        </div>
 
         <!-- Input Text -->
         <textarea
@@ -41,8 +79,12 @@
         <!-- Language Selection -->
         <div class="language-box">
 
+        <p id="detectedLang"></p>
+
             <!-- Source Language -->
             <select id="sourceLang">
+
+                <option value="auto">Auto Detect</option>
 
                 <option value="en">English</option>
 
@@ -104,14 +146,47 @@
 
         </div>
 
+        <!-- Translation History -->
+
+        <div class="history-box">
+
+        <div class="history-header">
+
+        <h3>
+        <i class="fa-solid fa-clock-rotate-left"></i>
+        Translation History
+        </h3>
+
+        <button id="clearHistoryBtn">
+
+        Clear
+
+        </button>
+
+        </div>
+
+        <ul id="historyList"></ul>
+
+        </div>
+
         <!-- Copy Button -->
         <button id="copyBtn">
 
             Copy Text
 
         </button>
+        <button id="pdfBtn">
+
+        <i class="fa-solid fa-file-pdf"></i>
+        Download PDF
+
+        </button>
 
     </div>
+
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://unpkg.com/tesseract.js@v5.0.4/dist/tesseract.min.js"></script>
 
     <script src="script.js"></script>
 

@@ -4,6 +4,8 @@ document.getElementById("translateBtn");
 const outputText =
 document.getElementById("outputText");
 
+const inputBox =
+document.getElementById("inputText");
 
 
 /* =========================
@@ -23,7 +25,6 @@ copyBtn.addEventListener("click", () => {
     alert("Copied!");
 
 });
-
 
 
 /* =========================
@@ -49,6 +50,7 @@ swapBtn.addEventListener("click", () => {
 
 });
 
+
 /* =========================
    SPEECH TO TEXT
 ========================= */
@@ -65,7 +67,27 @@ voiceBtn.addEventListener("click", () => {
     const recognition =
     new SpeechRecognition();
 
-    recognition.lang = "en-US";
+    let sourceLang =
+    document.getElementById("sourceLang").value;
+
+    const languageMap = {
+
+        "en": "en-US",
+
+        "ta": "ta-IN",
+
+        "hi": "hi-IN",
+
+        "te": "te-IN",
+
+        "ml": "ml-IN",
+
+        "fr": "fr-FR"
+
+    };
+
+    recognition.lang =
+    languageMap[sourceLang] || "en-US";
 
     recognition.start();
 
@@ -83,6 +105,8 @@ voiceBtn.addEventListener("click", () => {
         voiceBtn.innerHTML =
         '<i class="fa-solid fa-microphone"></i> Speak';
 
+        translateText();
+
     };
 
     recognition.onerror = () => {
@@ -97,40 +121,361 @@ voiceBtn.addEventListener("click", () => {
 });
 
 
-
 /* =========================
-   TRANSLATE BUTTON
+   TRANSLATION HISTORY
 ========================= */
 
-translateBtn.addEventListener("click", async () => {
+const historyList =
+document.getElementById("historyList");
+
+function saveHistory(input, translated){
+
+    let history =
+    JSON.parse(localStorage.getItem("translations"))
+    || [];
+
+    history.unshift({
+
+        input,
+
+        translated
+
+    });
+
+    localStorage.setItem(
+        "translations",
+        JSON.stringify(history)
+    );
+
+    loadHistory();
+
+}
+
+
+function loadHistory(){
+
+    let history =
+    JSON.parse(localStorage.getItem("translations"))
+    || [];
+
+    historyList.innerHTML = "";
+
+    history.forEach(item => {
+
+        const li =
+        document.createElement("li");
+
+        li.innerHTML =
+        `<b>Input:</b> ${item.input}
+        <br>
+        <b>Output:</b> ${item.translated}`;
+
+        historyList.appendChild(li);
+
+    });
+
+}
+
+loadHistory();
+
+
+/* =========================
+   CLEAR HISTORY
+========================= */
+
+const clearHistoryBtn =
+document.getElementById("clearHistoryBtn");
+
+clearHistoryBtn.addEventListener("click", () => {
+
+    const confirmClear =
+    confirm("Clear all history?");
+
+    if(confirmClear){
+
+        localStorage.removeItem("translations");
+
+        historyList.innerHTML = "";
+
+    }
+
+});
+
+
+/* =========================
+   OCR IMAGE TEXT EXTRACTION
+========================= */
+
+const imageInput =
+document.getElementById("imageInput");
+
+imageInput.addEventListener("change", async () => {
+
+    const file =
+    imageInput.files[0];
+
+    if(!file) return;
+
+    outputText.innerHTML =
+    "Extracting text from image...";
+
+    const result =
+    await Tesseract.recognize(
+        file,
+        "eng"
+    );
+
+    document.getElementById("inputText").value =
+    result.data.text;
+
+    outputText.innerHTML =
+    "Text Extracted Successfully";
+
+    translateText();
+
+});
+
+
+/* =========================
+   DOWNLOAD PDF
+========================= */
+
+const pdfBtn =
+document.getElementById("pdfBtn");
+
+pdfBtn.addEventListener("click", () => {
+
+    const { jsPDF } =
+    window.jspdf;
+
+    const doc =
+    new jsPDF();
+
+    const input =
+    document.getElementById("inputText").value;
+
+    const translated =
+    outputText.innerText;
+
+    doc.setFontSize(16);
+
+    doc.text("AI Language Translator", 20, 20);
+
+    doc.setFontSize(12);
+
+    doc.text("Input Text:", 20, 40);
+
+    doc.text(input, 20, 50);
+
+    doc.text("Translated Text:", 20, 80);
+
+    doc.text(translated, 20, 90);
+
+    doc.save("translation.pdf");
+
+});
+
+
+/* =========================
+   THEME TOGGLE
+========================= */
+
+const themeToggle =
+document.getElementById("themeToggle");
+
+themeToggle.addEventListener("click", () => {
+
+    document.body.classList.toggle("light");
+
+    if(document.body.classList.contains("light")){
+
+        themeToggle.innerHTML =
+        '<i class="fa-solid fa-sun"></i>';
+
+    }
+
+    else{
+
+        themeToggle.innerHTML =
+        '<i class="fa-solid fa-moon"></i>';
+
+    }
+
+});
+/* =========================
+   CAMERA OCR TRANSLATION
+========================= */
+
+const video =
+document.getElementById("video");
+
+const canvas =
+document.getElementById("canvas");
+
+const cameraBtn =
+document.getElementById("cameraBtn");
+
+const captureBtn =
+document.getElementById("captureBtn");
+
+let stream;
+
+
+/* OPEN CAMERA */
+
+cameraBtn.addEventListener("click", async () => {
+
+    stream =
+    await navigator.mediaDevices.getUserMedia({
+
+        video:true
+
+    });
+
+    video.srcObject = stream;
+
+    video.style.display = "block";
+
+});
+
+
+/* CAPTURE IMAGE */
+
+captureBtn.addEventListener("click", async () => {
+
+    const context =
+    canvas.getContext("2d");
+
+    canvas.width =
+    video.videoWidth;
+
+    canvas.height =
+    video.videoHeight;
+
+    context.drawImage(
+        video,
+        0,
+        0
+    );
+
+    outputText.innerHTML =
+    "Extracting text from image...";
+
+    const result =
+    await Tesseract.recognize(
+        canvas,
+        "eng"
+    );
+
+    document.getElementById("inputText").value =
+    result.data.text;
+
+    translateText();
+
+});
+
+
+/* =========================
+   MAIN TRANSLATE FUNCTION
+========================= */
+
+async function translateText(){
 
     const inputText =
     document.getElementById("inputText").value;
 
-    const sourceLang =
+    let sourceLang =
     document.getElementById("sourceLang").value;
 
     const targetLang =
     document.getElementById("targetLang").value;
 
-    if(inputText.trim() === ""){
+    const detectedLangText =
+    document.getElementById("detectedLang");
 
-        alert("Please enter text");
+    if(inputText.trim() === ""){
 
         return;
 
     }
 
-    outputText.innerHTML = "Translating...";
+    outputText.innerHTML =
+    "Translating...";
+
+
+    /* =========================
+       AUTO LANGUAGE DETECTION
+    ========================= */
+
+    if(sourceLang === "auto"){
+
+        const text =
+        inputText.trim();
+
+        if(/[அ-ஹ]/.test(text)){
+
+            sourceLang = "ta";
+
+            detectedLangText.innerHTML =
+            "Detected Language: Tamil";
+
+        }
+
+        else if(/[ఀ-౿]/.test(text)){
+
+            sourceLang = "te";
+
+            detectedLangText.innerHTML =
+            "Detected Language: Telugu";
+
+        }
+
+        else if(/[ഀ-ൿ]/.test(text)){
+
+            sourceLang = "ml";
+
+            detectedLangText.innerHTML =
+            "Detected Language: Malayalam";
+
+        }
+
+        else if(/[ऀ-ॿ]/.test(text)){
+
+            sourceLang = "hi";
+
+            detectedLangText.innerHTML =
+            "Detected Language: Hindi";
+
+        }
+
+        else{
+
+            sourceLang = "en";
+
+            detectedLangText.innerHTML =
+            "Detected Language: English";
+
+        }
+
+    }
+
+    else{
+
+        detectedLangText.innerHTML = "";
+
+    }
+
 
     try{
 
         const url =
 `https://translate.googleapis.com/translate_a/single?client=gtx&sl=${sourceLang}&tl=${targetLang}&dt=t&q=${encodeURIComponent(inputText)}`;
 
-        const response = await fetch(url);
+        const response =
+        await fetch(url);
 
-        const data = await response.json();
+        const data =
+        await response.json();
 
         let translated = "";
 
@@ -141,9 +486,9 @@ translateBtn.addEventListener("click", async () => {
         });
 
 
-
-
-        /* Tamil Corrections */
+        /* =========================
+           CUSTOM TAMIL CORRECTIONS
+        ========================= */
 
         const customTamil = {
 
@@ -163,7 +508,6 @@ translateBtn.addEventListener("click", async () => {
         };
 
 
-
         if(targetLang === "ta"){
 
             const lowerText =
@@ -178,7 +522,51 @@ translateBtn.addEventListener("click", async () => {
 
         }
 
-        outputText.innerHTML = translated;
+
+        /* =========================
+           SHOW OUTPUT
+        ========================= */
+
+        outputText.innerHTML =
+        translated;
+
+
+        /* =========================
+           SAVE HISTORY
+        ========================= */
+
+        saveHistory(inputText, translated);
+
+
+        /* =========================
+           TEXT TO SPEECH
+        ========================= */
+
+        const speech =
+        new SpeechSynthesisUtterance(
+            translated
+        );
+
+        const speechMap = {
+
+            "en": "en-US",
+
+            "ta": "ta-IN",
+
+            "hi": "hi-IN",
+
+            "te": "te-IN",
+
+            "ml": "ml-IN",
+
+            "fr": "fr-FR"
+
+        };
+
+        speech.lang =
+        speechMap[targetLang];
+
+        window.speechSynthesis.speak(speech);
 
     }
 
@@ -190,5 +578,39 @@ translateBtn.addEventListener("click", async () => {
         console.log(error);
 
     }
+
+}
+
+
+/* =========================
+   TRANSLATE BUTTON
+========================= */
+
+translateBtn.addEventListener("click", () => {
+
+    translateText();
+
+});
+
+
+/* =========================
+   REAL TIME TRANSLATION
+========================= */
+
+let typingTimer;
+
+inputBox.addEventListener("input", () => {
+
+    clearTimeout(typingTimer);
+
+    typingTimer = setTimeout(() => {
+
+        if(inputBox.value.trim() !== ""){
+
+            translateText();
+
+        }
+
+    }, 800);
 
 });

@@ -121,3 +121,318 @@ button:hover{
 #voiceBtn:hover{
     background:#0f766e;
 }
+#detectedLang{
+    color:#94a3b8;
+    margin-bottom:15px;
+    font-size:14px;
+}
+.history-box{
+
+    margin-top:25px;
+
+    background:#0f172a;
+
+    padding:20px;
+
+    border-radius:15px;
+
+}
+
+.history-box h3{
+
+    color:white;
+
+    margin-bottom:15px;
+
+}
+
+#historyList{
+
+    list-style:none;
+
+}
+
+#historyList li{
+
+    background:#1e293b;
+
+    color:#e2e8f0;
+
+    padding:12px;
+
+    margin-bottom:10px;
+
+    border-radius:10px;
+
+    font-size:14px;
+
+    line-height:1.5;
+
+}
+.image-upload{
+
+    margin-bottom:20px;
+
+}
+
+.image-upload input{
+
+    width:100%;
+
+    padding:12px;
+
+    border-radius:10px;
+
+    background:white;
+
+}
+.history-header{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    margin-bottom:15px;
+
+}
+
+#clearHistoryBtn{
+
+    width:auto;
+
+    padding:8px 16px;
+
+    background:#ef4444;
+
+    font-size:14px;
+
+    border-radius:8px;
+
+}
+
+#clearHistoryBtn:hover{
+
+    background:#dc2626;
+
+}
+#pdfBtn{
+
+    margin-top:15px;
+
+    background:#dc2626;
+
+}
+
+#pdfBtn:hover{
+
+    background:#b91c1c;
+
+}
+/* =========================
+   THEME BUTTON
+========================= */
+
+#themeToggle{
+
+    width:50px;
+
+    height:50px;
+
+    border-radius:50%;
+
+    background:#3b82f6;
+
+    position:absolute;
+
+    top:20px;
+
+    right:20px;
+
+    font-size:18px;
+
+}
+
+
+/* =========================
+   LIGHT THEME
+========================= */
+
+body.light{
+
+    background:#f1f5f9;
+
+}
+
+body.light .container{
+
+    background:white;
+
+    box-shadow:0 10px 30px rgba(0,0,0,0.1);
+
+}
+
+body.light h1{
+
+    color:#0f172a;
+
+}
+
+body.light textarea{
+
+    background:#f8fafc;
+
+    color:#0f172a;
+
+}
+
+body.light select{
+
+    background:#f8fafc;
+
+    color:#0f172a;
+
+}
+
+body.light .chat-container{
+
+    background:#e2e8f0;
+
+}
+
+body.light .bot-message{
+
+    background:white;
+
+    color:#0f172a;
+
+}
+
+body.light .history-box{
+
+    background:#e2e8f0;
+
+}
+
+body.light #historyList li{
+
+    background:white;
+
+    color:#0f172a;
+
+}
+
+body.light .output-box{
+
+    background:#e2e8f0;
+
+}
+
+body.light #detectedLang{
+
+    color:#475569;
+
+}
+.container{
+
+    position:relative;
+
+}
+/* =========================
+   LIGHT THEME TEXT FIX
+========================= */
+
+body.light .output-box h3{
+
+    color:#0f172a;
+
+}
+
+body.light #outputText{
+
+    color:#0f172a;
+
+}
+
+body.light .history-box h3{
+
+    color:#0f172a;
+
+}
+
+body.light #historyList li{
+
+    color:#0f172a;
+
+}
+
+body.light .bot-message{
+
+    color:#0f172a;
+
+}
+
+body.light .chat-container{
+
+    color:#0f172a;
+
+}
+
+body.light .history-box{
+
+    background:#dbe4ee;
+
+}
+
+body.light .output-box{
+
+    background:#dbe4ee;
+
+}
+body.light{
+
+    background:#f8fafc;
+
+}
+/* =========================
+   CAMERA SECTION
+========================= */
+
+.camera-box{
+
+    margin-bottom:20px;
+
+}
+
+#video{
+
+    width:100%;
+
+    border-radius:15px;
+
+    margin-bottom:15px;
+
+    display:none;
+
+}
+
+#canvas{
+
+    display:none;
+
+}
+
+#cameraBtn{
+
+    margin-bottom:10px;
+
+    background:#14b8a6;
+
+}
+
+#captureBtn{
+
+    background:#f97316;
+
+}
